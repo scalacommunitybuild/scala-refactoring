@@ -43,7 +43,6 @@ scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
     "-unchecked",
     "-Xlint",
     "-Xfuture",
-    "-Xfatal-warnings",
     "-Yno-adapted-args",
     "-Ywarn-dead-code",
     "-Ywarn-unused-import",
