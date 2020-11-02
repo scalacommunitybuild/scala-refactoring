@@ -1,6 +1,6 @@
 name := "org.scala-refactoring.library"
 version := "0.14.0-SNAPSHOT"
-scalaVersion := "2.12.9"
+scalaVersion := "2.12.13-bin-2ab9556"
 moduleName := name.value
 organization := "org.scala-refactoring"
 crossScalaVersions := Seq("2.10.7", "2.11.12", scalaVersion.value)
@@ -8,6 +8,9 @@ crossVersion := CrossVersion.full
 fork := true
 parallelExecution in Test := false
 autoAPIMappings := true
+
+resolvers in Global += "scala-integration" at
+  "https://scala-ci.typesafe.com/artifactory/scala-integration/"
 
 libraryDependencies ++= Seq(
   "org.scala-lang"  % "scala-compiler"    % scalaVersion.value,
@@ -29,7 +32,6 @@ scalacOptions ++= (CrossVersion.partialVersion(scalaVersion.value) match {
     "-unchecked",
     "-Xlint",
     "-Xfuture",
-    "-Xfatal-warnings",
     "-Yno-adapted-args",
     "-Ywarn-dead-code",
     "-Ywarn-unused-import",
@@ -62,7 +64,6 @@ Seq(Compile, Test).flatMap { config =>
 }
 
 publishMavenStyle := true
-useGpg := true
 publishTo := {
   val nexus = "https://oss.sonatype.org"
   if (isSnapshot.value)
@@ -112,6 +113,8 @@ credentials ++= {
 // otherwise OSGi can't find out which nightly build is newest and therefore
 // not all caches are updated with the correct version of a nightly.
 packageOptions in Compile in packageBin += {
+  import scala.sys.process._
+  import sbt.io.Using
   val m = Using.fileInputStream(new java.io.File("MANIFEST.MF.prototype")) { in =>
     val manifest = new java.util.jar.Manifest(in)
     val attr = manifest.getMainAttributes

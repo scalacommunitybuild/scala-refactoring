@@ -46,8 +46,8 @@ class CompilerInstance {
     }
 
     val compiler = new Global(settings, new ConsoleReporter(settings) {
-      override def printMessage(pos: Position, msg: String): Unit = {
-      }
+      override def display(pos: Position, msg: String, severity: Severity)  = ()
+      override def doReport(pos: Position, msg: String, severity: Severity) = ()
     })
 
     try {
